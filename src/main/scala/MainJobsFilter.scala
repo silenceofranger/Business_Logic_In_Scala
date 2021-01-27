@@ -1,9 +1,11 @@
 object MainJobsFilter {
 
-  def jobsFilter(setOfRules: JobGroup, jobsList: List[Job]): List[Job] = {
+  def jobsFilter(setOfRules: JobGroup, jobsList: List[Job]): priorityAndJobsList = {
+
     val allOrAny = setOfRules.allOrAny
     var appendingFinalJobs = List[Job]()
-    val rules = setOfRules.rules
+    val rules = setOfRules.jobGroupWithPriority.jobGroupWithPriority
+    val priority = setOfRules.jobGroupWithPriority.priority
     var scannedInboundFeed = jobsList
     var storingFinalResult = jobsList
 
@@ -151,8 +153,8 @@ object MainJobsFilter {
             .intersect(jobsOfFourthCondition)
 
         }
-
-        return storingFinalResult
+        val answer = priorityAndJobsList(priority, storingFinalResult)
+        return answer
       }
 
 
@@ -295,7 +297,10 @@ object MainJobsFilter {
       }
     }
     storingFinalResult = appendingFinalJobs
-    storingFinalResult
+
+    val answer = priorityAndJobsList(priority, storingFinalResult)
+    answer
   }
+
 }
 
